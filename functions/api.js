@@ -2,11 +2,14 @@ const express = require("express");
 const serverless = require("serverless-http");
 const connectDB = require("../src/db");
 const Plan = require("../src/models/Plan");
-const { connect } = require("mongoose");
+// const { connect } = require("mongoose");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
+
+app.use(cors());
 
 connectDB();
 
