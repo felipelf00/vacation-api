@@ -13,13 +13,14 @@ connectDB();
 router = express.Router();
 
 router.get("/", (req, res) => {
-  res.json({
-    hello: "hi there",
-  });
+  // res.json({
+  //   hello: "hi there",
+  // });
+  res.send("Hello, weelcome to the API");
 });
 
 // Create a new plan
-app.post("/plans", async (req, res) => {
+router.post("/plans", async (req, res) => {
   try {
     const plan = new Plan(req.body);
     await plan.save();
@@ -29,16 +30,19 @@ app.post("/plans", async (req, res) => {
   }
 });
 
-app.get("/plans", async (req, res) => {
+router.get("/plans", async (req, res) => {
   try {
     const plans = await Plan.find({});
     res.json(plans);
+    // res.json({
+    //   hello: "hi plans",
+    // });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.get("/plans/:id", async (req, res) => {
+router.get("/plans/:id", async (req, res) => {
   try {
     const plan = await Plan.findById(req.params.id);
     if (!plan) {
@@ -50,7 +54,7 @@ app.get("/plans/:id", async (req, res) => {
   }
 });
 
-app.put("/plans/:id", async (req, res) => {
+router.put("/plans/:id", async (req, res) => {
   try {
     const plan = await Plan.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -64,7 +68,7 @@ app.put("/plans/:id", async (req, res) => {
   }
 });
 
-app.delete("/plans/:id", async (req, res) => {
+router.delete("/plans/:id", async (req, res) => {
   try {
     const plan = await Plan.findByIdAndDelete(req.params.id);
     if (!plan) {
@@ -77,6 +81,12 @@ app.delete("/plans/:id", async (req, res) => {
 });
 
 app.use("/.netlify/functions/api", router);
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running at port ${PORT}`);
+});
 
 module.exports = app;
 module.exports.handler = serverless(app);
